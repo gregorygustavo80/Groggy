@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from datetime import datetime, timedelta
-
+import os
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
@@ -28,8 +28,6 @@ def index():
     return render_template("index.html", resultados=resultados, hora_dormir=hora_dormir_str)
 
 if __name__ == "__main__":
-    import os
-
-port = int(os.environ.get("PORT", 5000))
-app.run(host="0.0.0.0", port=port, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
 
