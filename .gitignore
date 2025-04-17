@@ -1,0 +1,59 @@
+# ==============================
+# Ambiente Virtual (venv)
+# ==============================
+venv/
+.env/
+ENV/
+
+# ==============================
+# Python
+# ==============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.Python
+
+# Arquivos de cache e log
+*.log
+*.sqlite
+*.pot
+
+# Diretórios de build/distribuição
+build/
+dist/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+
+# ==============================
+# Flask específico
+# ==============================
+instance/
+.webassets-cache
+
+# Arquivos de ambiente (incluindo .env)
+.env
+.env.local
+.env.*.local
+
+# ==============================
+# VS Code
+# ==============================
+.vscode/
+!.vscode/settings.json  # (opcional: mantém configurações úteis)
+*.code-workspace
+
+# ==============================
+# Sistema/SO
+# ==============================
+.DS_Store  # (Mac)
+Thumbs.db  # (Windows)
+desktop.ini
+
+# ==============================
+# Arquivos de teste/coverage
+.coverage
+htmlcov/
+.pytest_cache/

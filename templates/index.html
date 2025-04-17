@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Groggy - Calculadora de Sono</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --bg-color-light: #f0f4f8;
+            --bg-color-dark: #1f1f1f;
+            --primary-color-light: #0077b6;
+            --primary-color-dark: #4e9fd1;
+            --card-bg-light: #ffffff;
+            --card-bg-dark: #2b2b2b;
+            --text-color-light: #333;
+            --text-color-dark: #f0f0f0;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            width: 100%;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: var(--card-bg-light);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px var(--shadow-light);
+            width: 400px;
+            text-align: center;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(-50px);
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        body.dark .container {
+            background-color: var(--card-bg-dark);
+            box-shadow: 0 4px 12px var(--shadow-dark);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: var(--primary-color-light);
+            transition: color 0.3s;
+            font-size: 2.5rem;
+        }
+
+        body.dark h1 {
+            color: var(--primary-color-dark);
+        }
+
+        h2 {
+            margin-top: 5px;
+            color: var(--text-color-light);
+            font-size: 1.2rem;
+        }
+
+        body.dark h2 {
+            color: var(--text-color-dark);
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="time"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        body.dark input[type="time"] {
+            border: 1px solid #444;
+            background-color: #333;
+            color: #fff;
+        }
+
+        button {
+            background-color: var(--primary-color-light);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        body.dark button {
+            background-color: var(--primary-color-dark);
+        }
+
+        button:hover {
+            background-color: #005f87;
+        }
+
+        body.dark button:hover {
+            background-color: #006d9e;
+        }
+
+        .result h2 {
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin: 8px 0;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        .theme-toggle {
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid var(--primary-color-light);
+            background-color: transparent;
+            border-radius: 8px;
+            color: var(--primary-color-light);
+        }
+
+        body.dark .theme-toggle {
+            border-color: var(--primary-color-dark);
+            color: var(--primary-color-dark);
+        }
+
+        .explanation {
+            width: 400px;
+            display: none;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        .explanation h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: var(--primary-color-light);
+        }
+
+        body.dark .explanation h3 {
+            color: var(--primary-color-dark);
+        }
+
+        .explanation p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .explanation code {
+            background-color: #eee;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        body.dark .explanation code {
+            background-color: #444;
+            color: #fff;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result ul li:nth-child(1) { animation-delay: 0.2s; }
+        .result ul li:nth-child(2) { animation-delay: 0.4s; }
+        .result ul li:nth-child(3) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="explanation" id="explanation">
+            <h3>🧠 Como funciona?</h3>
+            <p><strong>🕒 Fórmula:</strong><br>
+                <code>Hora de acordar = Hora de dormir + (90 min × n) + 15 min</code>
+            </p>
+            <p><strong>💤 O que é isso?</strong></p>
+            <ul style="padding-left: 20px; list-style: disc;">
+                <li><strong>90 minutos</strong> = 1 ciclo completo de sono</li>
+                <li><strong>n</strong> = número de ciclos (4 a 6)</li>
+                <li><strong>15 minutos</strong> = tempo médio para adormecer</li>
+            </ul>
+            <p>Escolher o horário certo para acordar no fim de um ciclo ajuda a evitar a sensação de cansaço.</p>
+        </div>
+
+        <div class="container">
+            <h1>Groggy</h1>
+            <h2>Calculadora de Sono</h2>
+            <form method="post" id="sleepForm">
+                <input type="time" name="hora_dormir" required value="{{ hora_dormir }}">
+                <button type="submit">Calcular melhores horários</button>
+            </form>
+
+            {% if resultados %}
+            <div class="result">
+                <h2>Você pode acordar em:</h2>
+                <ul>
+                    {% for item in resultados %}
+                        {% if item.erro %}
+                            <li style="color:red;">{{ item.erro }}</li>
+                        {% else %}
+                            <li>{{ item.ciclos }} ciclos - <strong>{{ item.horario }}</strong></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <button class="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
+            <button onclick="toggleExplanation()">Como funciona?</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            if (document.body.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        window.addEventListener('load', function () {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+            }
+        });
+
+        function toggleExplanation() {
+            const explanation = document.getElementById("explanation");
+            explanation.classList.toggle("show");
+        }
+    </script>
+</body>
+</html>
