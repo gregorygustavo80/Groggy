@@ -42,7 +42,7 @@ instance/
 # VS Code
 # ==============================
 .vscode/
-!.vscode/settings.json  # (opcional: mantém configurações úteis)
+!.vscode/settings.json  
 *.code-workspace
 
 # ==============================
